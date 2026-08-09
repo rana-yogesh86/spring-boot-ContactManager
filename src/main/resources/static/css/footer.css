@@ -1,0 +1,38 @@
+/*
+  footer.css — styles for fragments/footer.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/footer.css
+*/
+
+.cm-footer{
+  border-top:1px solid var(--border);
+  background:var(--surface);
+  margin-top:60px;
+}
+.cm-footer__inner{
+  max-width:var(--max-width); margin:0 auto; padding:28px 20px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  flex-wrap:wrap;
+}
+
+.cm-footer__brand{ display:flex; align-items:center; gap:8px; }
+.cm-footer__mark{
+  width:24px; height:24px; border-radius:6px;
+  background:var(--primary); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:600; font-size:11px;
+}
+.cm-footer__text{ font-size:13px; color:var(--ink-muted); }
+
+.cm-footer__links{ display:flex; align-items:center; gap:4px; }
+.cm-footer__links a{
+  text-decoration:none; color:var(--ink-muted); font-size:13px; font-weight:500;
+  padding:6px 10px; border-radius:6px; transition:background .15s ease, color .15s ease;
+}
+.cm-footer__links a:hover{ background:var(--pill-bg); color:var(--ink); }
+
+.cm-footer__meta{ font-size:12.5px; color:var(--ink-muted); }
+
+@media (max-width: 560px){
+  .cm-footer__inner{ flex-direction:column; align-items:flex-start; gap:14px; }
+}

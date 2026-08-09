@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/basis::layout(~{::contactFormTitle} , ~{::contactFormContent},~{::contactFormCss})}">
+<head>
+  <meta charset="UTF-8">
+  
+  <title th:if="${contact.id} ? 'Edit contact — Contact Manager' : 'Add contact — Contact Manager'" th:fragment="contactFormTitle">Add contact — Contact Manager</title>
+  <link th:href="@{/css/contacts/contact-form.css}" rel="stylesheet" th:fragment="contactFormCss">
+  
+</head>
+<body>
+	
+	
+
+  <main class="cf" th:fragment="contactFormContent">
+
+    <div class="cf-head">
+      <h1 class="cf-head__title" th:text="${contact.id} ? 'Edit contact' : 'Add a new contact'">Add a new contact</h1>
+      <p class="cf-head__sub" th:text="${contact.id} ? 'Update the details below and save your changes.' : 'Fill in the details below to save a new contact.'">
+        Fill in the details below to save a new contact.
+      </p>
+    </div>
+	
+    <div class="cf-card">
+		
+      <div class="cf-alert cf-alert--error" th:if="${errorMessage}" th:text="${errorMessage}">
+        Something went wrong. Please check the fields below.
+      </div>
+
+      <!--
+        formAction comes from the controller:
+          - Add:  model.addAttribute("formAction", "/contacts/save")
+          - Edit: model.addAttribute("formAction", "/contacts/" + id + "/update")
+        enctype="multipart/form-data" is REQUIRED for the image upload to work.
+      -->
+      <form novalidate="novalidate" th:action="@{${formAction}}"  
+      		th:object="${contact}" method="post" enctype="multipart/form-data">
+        <!-- Hidden id field, needed so @ModelAttribute Contact keeps its identity on update -->
+		<input type="hidden" th:if="${contact.id}" th:field="*{id}">
+		<input type="hidden" th:if="${contact.currentImage}"th:field="*{currentImage}">
+		
+        <div class="cf-photo">
+          <!-- Existing photo shown by default in edit mode; JS below swaps it live if a new file is chosen -->
+          <div class="cf-photo__preview" id="photoPreview"
+               th:style="${contact.image != null} ? 'background-image:url(' + @{'/'+${contact.image}} + ')' : ''">
+            <span th:if="${contact.image == null}">📷</span>
+          </div>
+          
+          <div class="cf-photo__actions">
+            <label class="cf-photo__label" for="image">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span th:text="${contact.image != null} ? 'Change photo' : 'Upload photo'">Upload photo</span>
+               
+            </label>
+              <span class="cf-photo__filename" id="fileName">No file chosen</span>
+            <input type="file" id="image" name="image" th:field="*{image}"
+            	th:classappend="${#fields.hasErrors('image')?'is-invalid':''}" accept="image/png, image/jpeg, image/webp" onchange="cfPreviewImage(this)">
+            <span class="cf-photo__hint">JPG, PNG or WEBP. Max 2MB. Optional
+              <span th:if="${contact.image != null}"> — leave empty to keep the current photo.</span>
+            </span>
+            
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
+            <div class="invalid-feedback" th:if="${profileImageError}" th:text="${profileImageError}"></div>
+          </div>
+          
+        </div>
+
+        <div class="cf-row">
+          <div class="cf-field">
+            <label for="name">Full name</label>
+            <input type="text" id="name" th:field="*{name}" th:classappend="${#fields.hasErrors('name')?'is-invalid':''}" placeholder="Jane Doe" required autofocus>
+          
+          	<div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            
+          </div>
+          
+          <div class="cf-field">
+            <label for="contactNumber">Contact number</label>
+            <input type="tel" id="contactNumber" maxlength="10" th:field="*{contactNumber}" 
+            th:classappend="${#fields.hasErrors('contactNumber')?'is-invalid':''}" placeholder="+91 98765 43210" required>
+          
+          	<div class="invalid-feedback" th:if="${#fields.hasErrors('contactNumber')}" 
+          		th:errors="*{contactNumber}"></div>
+            
+          </div>
+        </div>
+
+        <div class="cf-field">
+          <label for="email">Email <span class="cf-optional">(optional)</span></label>
+          <input type="email" id="email" th:field="*{email}" 
+          	th:classappend="${#fields.hasErrors('email')?'is-invalid':''}" placeholder="jane@example.com">
+        	
+        	<div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" 
+          		th:errors="*{email}"></div>
+            
+        </div>
+
+        <div class="cf-row">
+          <div class="cf-field">
+            <label for="work">Work / Company <span class="cf-optional">(optional)</span></label>
+            <input type="text" id="work" th:field="*{work}" th:classappend="${#fields.hasErrors('work')?'is-invalid':''}"
+            placeholder="e.g. Product Designer at Acme">
+            
+          </div>
+          <div class="cf-field">
+            <label for="address">Address <span class="cf-optional">(optional)</span></label>
+            <input type="text" id="address" th:field="*{address}" 
+            th:classappend="${#fields.hasErrors('address')?'is-invalid':''}"
+            placeholder="City, Country">
+            
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('address')}" 
+          		th:errors="*{address}"></div>
+          		
+          </div>
+        </div>
+
+        <div class="cf-field">
+          <label for="description">Description / Notes <span class="cf-optional">(optional)</span></label>
+          <textarea id="description" th:field="*{description}" rows="4" 
+          th:classappend="${#fields.hasErrors('description')?'is-invalid':''}"placeholder="Anything worth remembering about this contact..."></textarea>
+        
+        <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" 
+          		th:errors="*{description}"></div>
+        </div>
+
+        <div class="cf-actions">
+          <a th:href="@{/contacts}" class="cf-btn cf-btn--ghost">Cancel</a>
+          <button type="submit" class="cf-btn cf-btn--primary" th:text="${contact.id != null} ? 'Save changes' : 'Save contact'">Save contact</button>
+        </div>
+      </form>
+    </div>
+  
+	  <script th:inline="none">
+		     function cfPreviewImage(input){
+	      var preview = document.getElementById('photoPreview');
+	      var fileName = document.getElementById('fileName');
+	      if (input.files && input.files[0]) {
+	        fileName.textContent = input.files[0].name;
+	        var reader = new FileReader();
+	        reader.onload = function(e){
+	          preview.style.backgroundImage = 'none';
+	          preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview">';
+	        };
+	        reader.readAsDataURL(input.files[0]);
+	      } else {
+	        fileName.textContent = 'No file chosen';
+	      }
+	    }
+	  </script>
+  
+  </main>
+
+  
+
+</body>
+</html>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/basis :: layout(~{::adminUsersTitle}, ~{::adminUsersContent}, ~{::adminUsersCss})}">
+
+<head>
+	<meta charset="UTF-8" />
+	<title th:fragment="adminUsersTitle">Manage Users - Admin - Contact Manager</title>
+	<link rel="stylesheet" th:href="@{/css/admin/admin-users.css}" th:fragment="adminUsersCss" />
+
+</head>
+<body>
+	<!-- Guard this whole page server-side too (e.g. @PreAuthorize("hasRole('ADMIN')")) — sec:authorize is UI-only. -->
+	<div class="ad" th:fragment="adminUsersContent" sec:authorize="hasRole('ADMIN')">
+
+		<!-- Pass from your controller, e.g.:
+		     model.addAttribute("users", page.getContent());
+		     model.addAttribute("currentPage", page.getNumber());
+		     model.addAttribute("totalPages", page.getTotalPages());
+		     model.addAttribute("totalItems", page.getTotalElements());
+		     model.addAttribute("pageSize", page.getSize());
+		     model.addAttribute("totalUsers", userService.count());
+		     model.addAttribute("totalAdmins", userService.countByRole("ADMIN"));
+		     model.addAttribute("totalActive", userService.countByStatus("ACTIVE"));
+		     model.addAttribute("totalSuspended", userService.countByStatus("SUSPENDED"));
+		     model.addAttribute("q", q);                 // current search keyword, or null
+		     model.addAttribute("roleFilter", role);      // current role filter, or null
+		     model.addAttribute("activePage", "adminUsers"); -->
+
+		<div class="ad-head">
+			<div>
+				<span class="home-hero__eyebrow">Admin</span>
+				<h1 class="ad-head__title">Manage users</h1>
+				<p class="ad-head__sub">View, search, and moderate every account on Contact Manager.</p>
+			</div>
+		</div>
+
+		<!-- Success / error banners: wire to redirect attributes from role/status/delete actions -->
+		<div class="ad-alert ad-alert--success" th:if="${success}">
+			<span th:text="${success}">User updated.</span>
+		</div>
+		<div class="ad-alert ad-alert--error" th:if="${error}">
+			<span th:text="${error}">Something went wrong.</span>
+		</div>
+
+		<section class="ad-stats">
+			<div class="ad-stats__card">
+				<div class="ad-stats__value" th:text="${totalUsers ?: 0}">0</div>
+				<div class="ad-stats__label">Total users</div>
+			</div>
+			<div class="ad-stats__card">
+				<div class="ad-stats__value" th:text="${totalAdmins ?: 1}"></div>
+				<div class="ad-stats__label">Admins</div>
+			</div>
+			<div class="ad-stats__card">
+				<div class="ad-stats__value" th:text="${totalActive ?: 0}">0</div>
+				<div class="ad-stats__label">Active</div>
+			</div>
+			<div class="ad-stats__card">
+				<div class="ad-stats__value" th:text="${totalSuspended ?: 0}">0</div>
+				<div class="ad-stats__label">Suspended</div>
+			</div>
+		</section>
+
+		<div class="ad-card">
+
+			<form th:action="@{/admin/users}" method="get" class="ad-toolbar">
+				<input type="text" name="q" th:value="${q}" placeholder="Search by name or email&hellip;" class="ad-toolbar__search" />
+
+				<select name="role" class="ad-toolbar__select">
+					<option value="" th:selected="${roleFilter == null or roleFilter == ''}">All roles</option>
+					<option value="ADMIN" th:selected="${roleFilter == 'ADMIN'}">Admin</option>
+					<option value="USER" th:selected="${roleFilter == 'USER'}">User</option>
+				</select>
+
+				<select name="status" class="ad-toolbar__select">
+					<option value="" th:selected="${statusFilter == null or statusFilter == ''}">All statuses</option>
+					<option value="ACTIVE" th:selected="${statusFilter == 'ACTIVE'}">Active</option>
+					<option value="SUSPENDED" th:selected="${statusFilter == 'SUSPENDED'}">Suspended</option>
+				</select>
+
+				<button type="submit" class="ad-toolbar__btn">Search</button>
+			</form>
+
+			<!-- Empty state -->
+			<div class="ad-empty" th:if="${users == null or #lists.isEmpty(users)}">
+				<p>No users match your filters.</p>
+			</div>
+
+			<div class="ad-table-wrap" th:if="${users != null and !#lists.isEmpty(users)}">
+				<table class="ad-table">
+					<thead>
+						<tr>
+							<th style="text-align: center">User</th>
+							<th style="text-align: center">Role</th>
+							<th style="text-align: center">Status</th>
+							<th style="text-align: center">Joined</th>
+							<th style="text-align: center">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${users}">
+							<td>
+								<div class="ad-user">
+<!-- 									<div class="ad-user__avatar" -->
+<!-- 										th:style="${user.image != null} ? 'background-image:url('/' + ${user.image} + ')' : ''"> -->
+<!-- 										<span th:if="${user.image == null}" th:text="${#strings.substring(user.name, 0, 1)}">A</span> -->
+<!-- 									</div> -->
+									<div>
+										<p class="ad-user__name" th:text="${user.name}">Jane Doe</p>
+										<p class="ad-user__email" th:text="${user.email}">jane@example.com</p>
+									</div>
+								</div>
+							</td>
+							<td>
+								<span class="ad-badge" th:classappend="${user.role == 'ADMIN'} ? 'ad-badge--admin' : 'ad-badge--user'"
+									th:text="${user.role == 'ADMIN'} ? 'Admin' : 'User'">User</span>
+							</td>
+							<td>
+								<span class="ad-badge" th:classappend="${user.isActive} ? 'ad-badge--active' : 'ad-badge--suspended'"
+									th:text="${user.isActive} ? 'Active' : 'Suspended'">Active</span>
+							</td>
+							<td>
+								<span class="ad-table__date" th:text="${#temporals.format(user.registeredOn, 'dd MMM yyyy')}">01 Jan 2025</span>
+							</td>
+							<td>
+								<div class="ad-actions">
+									<a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="ad-action-btn">Edit</a>
+
+									<form th:action="@{'/admin/users/' + ${user.id} + '/toggle-status'}" method="post" class="ad-inline-form">
+										<button type="submit" class="ad-action-btn"
+											th:text="${user.isActive} ? 'Suspend' : 'Activate'">Suspend</button>
+									</form>
+
+									<form th:action="@{'/admin/users/' + ${user.id} + '/delete'}" method="post" class="ad-inline-form"
+										onsubmit="return confirm('Delete this user? This cannot be undone.');">
+										<button type="submit" class="ad-action-btn ad-action-btn--danger">Delete</button>
+									</form>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- Pagination — inlined (rather than the shared fragment) so the current
+		     search/role/status filters are preserved across page links. -->
+		<nav class="cm-pagination" th:if="${totalPages != null and totalPages > 1}" aria-label="Pagination">
+			<a th:href="@{/admin/users(page=${currentPage - 1}, q=${q}, role=${roleFilter}, status=${statusFilter})}"
+				class="cm-pagination__nav" th:classappend="${currentPage == 0} ? 'is-disabled'" aria-label="Previous page">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6" /></svg>
+			</a>
+
+			<ul class="cm-pagination__list">
+				<th:block th:if="${totalPages <= 5}">
+					<li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+						<a th:href="@{/admin/users(page=${i}, q=${q}, role=${roleFilter}, status=${statusFilter})}" th:text="${i + 1}"
+							class="cm-pagination__page" th:classappend="${i == currentPage} ? 'is-active'">1</a>
+					</li>
+				</th:block>
+				<th:block th:if="${totalPages > 5}">
+					<li>
+						<a th:href="@{/admin/users(page=0, q=${q}, role=${roleFilter}, status=${statusFilter})}" th:text="1"
+							class="cm-pagination__page" th:classappend="${currentPage == 0} ? 'is-active'">1</a>
+					</li>
+					<li th:if="${currentPage > 2}"><span class="cm-pagination__ellipsis">&hellip;</span></li>
+					<li th:each="i : ${#numbers.sequence(T(java.lang.Math).max(1, currentPage - 1), T(java.lang.Math).min(totalPages - 2, currentPage + 1))}"
+						th:if="${i > 0 and i < totalPages - 1}">
+						<a th:href="@{/admin/users(page=${i}, q=${q}, role=${roleFilter}, status=${statusFilter})}" th:text="${i + 1}"
+							class="cm-pagination__page" th:classappend="${i == currentPage} ? 'is-active'">2</a>
+					</li>
+					<li th:if="${currentPage < totalPages - 3}"><span class="cm-pagination__ellipsis">&hellip;</span></li>
+					<li>
+						<a th:href="@{/admin/users(page=${totalPages - 1}, q=${q}, role=${roleFilter}, status=${statusFilter})}" th:text="${totalPages}"
+							class="cm-pagination__page" th:classappend="${currentPage == totalPages - 1} ? 'is-active'">10</a>
+					</li>
+				</th:block>
+			</ul>
+
+			<a th:href="@{/admin/users(page=${currentPage + 1}, q=${q}, role=${roleFilter}, status=${statusFilter})}"
+				class="cm-pagination__nav" th:classappend="${currentPage == totalPages - 1} ? 'is-disabled'" aria-label="Next page">
+				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6" /></svg>
+			</a>
+		</nav>
+
+	</div>
+</body>
+</html>

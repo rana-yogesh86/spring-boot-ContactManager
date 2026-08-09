@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	th:replace="~{fragments/basis :: layout(~{::signUpTitle},
+				~{::registerFormContent} , ~{::signUpCss})}">
+	<head>
+		<meta charset="UTF-8">
+		<title th:fragment="signUpTitle">Sign up — Contact Manager</title>
+	
+		<link th:href="@{/css/register.css}" rel="stylesheet" th:fragment="signUpCss">
+	
+	</head>
+	<body>
+	
+		<div class="auth-wrap" th:fragment="registerFormContent">
+			<div class="auth-card">
+				<h1 class="auth-card__title">Create your account</h1>
+				<p class="auth-card__subtitle">Sign up to start managing your
+					contacts.</p>
+	
+				<div class="auth-alert auth-alert--error" th:if="${errorMessage}"
+					th:text="${errorMessage}">Something went wrong. Please try
+					again.</div>
+	
+				<!--
+	        th:object binds to a RegisterRequest DTO, e.g.:
+	          record RegisterRequest(String fullName, String email, String password,
+	                                  String confirmPassword) {}
+	        No role field here on purpose — every self-signup is created as a plain
+	        USER server-side. Admin accounts should be created another way (seeded
+	        in the DB, or promoted by an existing admin), never self-selected here.
+	      -->
+				<form novalidate="novalidate" th:action="@{/process-signup}" th:object="${registerRequest}"
+					method="post">
+	
+					<div class="auth-field">
+						<label for="fullName">Full name</label> 
+						<input type="text"
+							id="fullName" th:field="*{fullName}" 
+							th:classappend="${#fields.hasErrors('fullName')?'is-invalid' : ''}"
+							placeholder="Jane Doe"
+							required autofocus>
+						
+						<div class="invalid-feedback" 
+							th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+							
+					</div>
+	
+					<div class="auth-field">
+						<label for="email">Email</label> 
+						<input type="email" id="email"
+							th:field="*{email}" 
+							th:classappend="${#fields.hasErrors('email')?'is-invalid' : ''}"
+							placeholder="you@example.com" required>
+						<div class="invalid-feedback" 
+							th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					</div>
+	
+					<div class="auth-field">
+						<label for="password">Password</label> <input type="password"
+							id="password" th:field="*{password}" 
+							th:classappend="${#fields.hasErrors('password')?'is-invalid' : ''}"
+							placeholder="••••••••"
+							minlength="8" required>
+						<p class="auth-hint">At least 8 characters.</p>
+						
+						<div class="invalid-feedback" 
+							th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+						
+					</div>
+	
+					<div class="auth-field">
+						<label for="confirmPassword">Confirm password</label> 
+						<input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+							placeholder="••••••••" minlength="8" required>
+							
+							<div class="invalid-feedback" 
+							th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+					</div>
+	
+					<label class="auth-terms"> <input type="checkbox"
+						name="acceptTerms" required > <span>I agree to the <a
+							th:href="@{/terms}">Terms of Service</a> and <a
+							th:href="@{/privacy}">Privacy Policy</a>.
+					</span>
+					</label>
+	
+					<button type="submit" class="auth-submit">Create account</button>
+				</form>
+	
+				<p class="auth-footer">
+					Already have an account? <a th:href="@{/login}">Log in</a>
+				</p>
+			</div>
+		</div>
+	
+	</body>
+</html>

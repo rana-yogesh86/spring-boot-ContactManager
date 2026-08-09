@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security" 
+	th:fragment="layout(title , content ,stylecss)">
+<head>
+	<meta charset="UTF-8" />
+	
+	<th:block th:replace="${title}"></th:block>
+	
+	<link rel="stylesheet" th:href="@{/css/common.css}"/>
+	<link rel="stylesheet" th:href="@{/css/navbar.css}"/>
+	<link rel="stylesheet" th:href="@{/css/footer.css}" />
+	<link rel="stylesheet" th:href="@{/css/public/pagination.css}" />
+	
+	<th:block th:replace="${stylecss}"></th:block>
+	
+	
+</head>
+<body>
+	<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+	
+	<div th:replace="${content}"></div>
+	
+	<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

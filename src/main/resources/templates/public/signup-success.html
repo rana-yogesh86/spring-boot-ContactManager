@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	th:replace="~{fragments/basis :: layout(~{::signUpSuccessTitle},
+	~{::welcomeContent} , ~{::welcomeCss})}">
+
+	<head>
+	  <meta charset="UTF-8">
+	  <title th:fragment="signUpSuccessTitle">Welcome — Contact Manager</title>
+	  <link th:href="@{/css/welcome.css}" rel="stylesheet" th:fragment="welcomeCss">
+	</head>
+	<body>
+	
+	  <div class="welcome-wrap" th:fragment="welcomeContent">
+	    <div class="welcome-card">
+	
+	      <div class="welcome-icon">
+	        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+	          <polyline points="20 6 9 17 4 12"/>
+	        </svg>
+	      </div>
+	
+	      <!-- fullName passed from the register controller, e.g.
+	           model.addAttribute("fullName", savedUser.getFullName()); -->
+	      <h1 class="welcome-title">
+	        Welcome<span th:text="', ' + ${newuser}"></span>! 🎉
+	      </h1>
+	      <p class="welcome-subtitle">
+	        Your account has been created. You're all set to start organizing your contacts.
+	      </p>
+	
+	      <ol class="welcome-steps">
+	        <li>1. Log in with the email and password you just created</li>
+	        <li>2. Add your first contact from the dashboard</li>
+	        <li>3. Search and manage contacts anytime</li>
+	      </ol>
+	
+	      <div class="welcome-actions">
+	        <a th:href="@{/login}" class="welcome-btn welcome-btn--primary">Continue to log in</a>
+	        <a th:href="@{/}" class="welcome-btn welcome-btn--ghost">Back to home</a>
+	      </div>
+	
+	    </div>
+	  </div>
+	
+	</body>
+</html>

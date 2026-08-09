@@ -1,0 +1,59 @@
+/*
+  login.css — styles for templates/auth/login.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/login.css
+*/
+
+.auth-wrap{
+  min-height:calc(100vh - var(--nav-height) - 140px);
+  display:flex; align-items:center; justify-content:center;
+  padding:56px 20px;
+}
+
+.auth-card{
+  width:100%; max-width:380px;
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  padding:32px 30px;
+}
+
+.auth-card__title{ font-size:22px; font-weight:700; color:var(--ink-strong); margin:0 0 6px; letter-spacing:-0.01em; }
+.auth-card__subtitle{ font-size:13.5px; color:var(--ink-muted); margin:0 0 26px; }
+
+.auth-alert{
+  font-size:13px; padding:10px 12px; border-radius:8px; margin-bottom:18px;
+}
+.auth-alert--error{ background:#fef2f2; color:#b3261e; border:1px solid #fecaca; }
+.auth-alert--success{ background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+
+.auth-field{ margin-bottom:16px; }
+.auth-field label{
+  display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:6px;
+}
+.auth-field input{
+  width:100%; font-size:14px; font-family:inherit; color:var(--ink);
+  padding:10px 12px; border:1px solid var(--border); border-radius:8px;
+  background:var(--surface-muted); outline:none;
+  transition:border-color .15s ease, background .15s ease;
+}
+.auth-field input:focus{ border-color:var(--primary); background:var(--surface); }
+
+.auth-row{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:22px; font-size:13px;
+}
+.auth-remember{ display:flex; align-items:center; gap:6px; color:var(--ink-muted); }
+.auth-row a{ color:var(--primary); text-decoration:none; font-weight:500; }
+.auth-row a:hover{ text-decoration:underline; }
+
+.auth-submit{
+  width:100%; background:var(--primary); color:#fff; border:none;
+  font-size:14.5px; font-weight:600; padding:11px 0; border-radius:8px;
+  cursor:pointer; transition:background .15s ease;
+}
+.auth-submit:hover{ background:var(--primary-dark); }
+
+.auth-footer{
+  text-align:center; font-size:13.5px; color:var(--ink-muted); margin-top:22px;
+}
+.auth-footer a{ color:var(--primary); font-weight:600; text-decoration:none; }
+.auth-footer a:hover{ text-decoration:underline; }

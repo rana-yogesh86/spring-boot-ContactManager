@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Pagination fragment (not rendered standalone)</title>
+</head>
+<body>
+
+<!--/*
+  Contact Manager — reusable pagination
+  ------------------------------------------------------------
+  Usage in any list page (e.g. contacts.html):
+
+    <div th:replace="~{fragments/pagination :: pagination(${currentPage}, ${totalPages}, '/contacts')}"></div>
+
+  Params:
+    currentPage : 0-indexed current page (matches Spring Data Pageable's Page#getNumber())
+    totalPages  : total number of pages (Page#getTotalPages())
+    baseUrl     : path to link back to, e.g. "/contacts" — the fragment appends ?page=N
+
+  Controller example (Spring Data):
+    Page<Contact> page = contactService.findAll(PageRequest.of(pageNumber, pageSize));
+    model.addAttribute("contacts", page.getContent());
+    model.addAttribute("currentPage", page.getNumber());
+    model.addAttribute("totalPages", page.getTotalPages());
+    model.addAttribute("totalItems", page.getTotalElements());
+    model.addAttribute("pageSize", page.getSize());
+
+  If your list page has other query params to preserve across pages (search keyword,
+  sort, filters), extend the th:href calls below, e.g.:
+    th:href="@{${baseUrl}(page=${i}, q=${param.q})}"
+*/-->
+
+<nav class="cm-pagination" th:fragment="pagination(currentPage, totalPages, baseUrl)"
+	th:if="${totalPages > 1}" aria-label="Pagination">
+
+	<a th:href="@{${baseUrl}(page=${currentPage - 1})}"
+		class="cm-pagination__nav" th:classappend="${currentPage == 0} ? 'is-disabled'"
+		aria-label="Previous page">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<polyline points="15 18 9 12 15 6" />
+		</svg>
+	</a>
+
+	<ul class="cm-pagination__list">
+
+		<!-- Few pages: show every page number, no ellipsis needed -->
+		<th:block th:if="${totalPages <= 5}">
+			<li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+				<a th:href="@{${baseUrl}(page=${i},keyword=${keyword})}" th:text="${i + 1}"
+					class="cm-pagination__page" th:classappend="${i == currentPage} ? 'is-active'">1</a>
+			</li>
+		</th:block>
+
+		<!-- Many pages: first, windowed middle, last, with ellipsis where pages are skipped -->
+		<th:block th:if="${totalPages > 5}">
+			<li>
+				<a th:href="@{${baseUrl}(page=0)}" th:text="1"
+					class="cm-pagination__page" th:classappend="${currentPage == 0} ? 'is-active'">1</a>
+			</li>
+
+			<li th:if="${currentPage > 2}"><span class="cm-pagination__ellipsis">&hellip;</span></li>
+
+			<li th:each="i : ${#numbers.sequence(T(java.lang.Math).max(1, currentPage - 1), T(java.lang.Math).min(totalPages - 2, currentPage + 1))}"
+				th:if="${i > 0 and i < totalPages - 1}">
+				<a th:href="@{${baseUrl}(page=${i})}" th:text="${i + 1}"
+					class="cm-pagination__page" th:classappend="${i == currentPage} ? 'is-active'">2</a>
+			</li>
+
+			<li th:if="${currentPage < totalPages - 3}"><span class="cm-pagination__ellipsis">&hellip;</span></li>
+
+			<li>
+				<a th:href="@{${baseUrl}(page=${totalPages - 1})}" th:text="${totalPages}"
+					class="cm-pagination__page" th:classappend="${currentPage == totalPages - 1} ? 'is-active'">10</a>
+			</li>
+		</th:block>
+
+	</ul>
+
+	<a th:href="@{${baseUrl}(page=${currentPage + 1})}"
+		class="cm-pagination__nav" th:classappend="${currentPage == totalPages - 1} ? 'is-disabled'"
+		aria-label="Next page">
+		<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<polyline points="9 18 15 12 9 6" />
+		</svg>
+	</a>
+
+</nav>
+
+</body>
+</html>

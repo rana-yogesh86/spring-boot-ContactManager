@@ -1,0 +1,39 @@
+/*
+  common.css — shared design tokens + base reset
+  Load this FIRST on every page, before any fragment/page-specific CSS.
+  Path: src/main/resources/static/css/common.css
+*/
+
+:root{
+  /* palette */
+  --ink:#1f2937;
+  --ink-muted:#6b7280;
+  --ink-strong:#111827;
+  --border:#e5e7eb;
+  --surface:#ffffff;
+  --surface-muted:#fafbfc;
+  --pill-bg:#eff2f7;
+
+  /* brand */
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+
+  /* layout */
+  --nav-height:60px;
+  --max-width:1080px;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:var(--ink);
+  background:var(--surface-muted);
+}
+
+a{ color:inherit; }
+
+.invalid-feedback{
+  font-size:12px; color:#dc2626; margin-top:6px;
+}

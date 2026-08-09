@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	>
+<head>
+	<title>Navbar fragment (not rendered standalone)</title>
+</head>
+<body>
+
+<!--/*
+  Contact Manager — basic navbar
+  ------------------------------------------------------------
+  Usage in layout.html:
+    <head>
+      <th:block th:replace="~{fragments/navbar :: navbarStyles}"></th:block>
+    </head>
+    <body>
+      <div th:replace="~{fragments/navbar :: navbar}"></div>
+      ...
+    </body>
+
+  Pass "activePage" from each controller (e.g. model.addAttribute("activePage","contacts"))
+  to get the active-link highlight.
+*/-->
+
+<nav class="cm-navbar" id="cmNavbar" th:fragment="navbar">
+  <div class="cm-navbar__inner">
+
+    <a th:href="@{/}" class="cm-brand">
+      <span class="cm-brand__mark">CM</span>
+      <span class="cm-brand__name">Contact Manager</span>
+    </a>
+
+    <div class="cm-links" sec:authorize="isAuthenticated()">
+      <a th:href="@{/user/contacts}" th:classappend="${activePage == 'contacts'} ? 'is-active'" >All contacts</a>
+      <a th:href="@{/user/contacts/add}" th:classappend="${activePage == 'add'} ? 'is-active'">Add contact</a>
+      <a th:href="@{/user/dashboard}" th:classappend="${activePage == 'dashboard'} ? 'is-active'">Dashboard</a>
+    </div>
+    
+    
+    <div class="cm-links" sec:authorize="isAnonymous()">
+      <a th:href="@{/}" th:classappend="${activePage == 'home'} ? 'is-active'" >Home</a>
+      <a th:href="@{/contact-us}" th:classappend="${activePage == 'contactUs'} ? 'is-active'">Contact Us</a>
+      <a th:href="@{/about}" th:classappend="${activePage == 'about'} ? 'is-active'">About</a>
+      <a th:href="@{/help}" th:classappend="${activePage == 'help'} ? 'is-active'">Help</a>
+    </div>
+
+    <div class="cm-actions">
+      <a th:href="@{/user/contacts/add}" class="cm-btn ">+ New contact</a>
+      <a th:href="@{/login}" sec:authorize="isAnonymous()" class="cm-btn cm-btn--ghost">Log in</a>
+      
+      <a th:href="@{/user/profile}" sec:authorize="isAuthenticated()"
+         th:classappend="${activePage == 'profile'} ? 'is-active'"
+         class="cm-avatar-btn" title="Your profile" aria-label="Your profile">
+        <span class="cm-avatar-btn__initial" th:if="${#authentication.principal.user.image == null}"
+    		th:text="${#strings.substring(#authentication.principal.user.name, 0, 1).toUpperCase()}" >U</span>
+    	<img  id="profileImage" 
+    		th:src="@{'/'+ ${#authentication.principal.user.image}}" 
+    		th:if="${#authentication.principal.user.image != null}"/>
+      </a>
+      
+		<div sec:authorize="isAuthenticated()" >
+			<form th:action="@{/logout}" method="post">
+				<button type="submit" class="cm-btn cm-btn--ghost">Logout</button>
+			</form>
+		</div>
+	  
+	  <a th:href="@{/sign-up}" sec:authorize="isAnonymous()" class="cm-btn cm-btn--primary">Sign up</a>
+      
+      <button class="cm-burger" type="button" onclick="cmToggleMobileNav()" aria-label="Toggle menu">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script th:inline="none">
+    function cmToggleMobileNav(){
+      document.getElementById('cmNavbar').classList.toggle('is-mobile-open');
+    }
+  </script>
+</nav>
+
+</body>
+</html>

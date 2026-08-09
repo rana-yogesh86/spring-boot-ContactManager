@@ -1,0 +1,92 @@
+/*
+  contacts-list.css — styles for templates/contacts/list.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/contacts-list.css
+*/
+
+.cl{ max-width:900px; margin:0 auto; padding:40px 20px 80px; }
+
+.cl-head{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  margin-bottom:22px; flex-wrap:wrap;
+}
+.cl-head__title{ font-size:24px; font-weight:700; color:var(--ink-strong); margin:0 0 4px; letter-spacing:-0.01em; }
+.cl-head__sub{ font-size:13.5px; color:var(--ink-muted); margin:0; }
+
+.cl-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  text-decoration:none; font-size:14px; font-weight:600;
+  padding:10px 18px; border-radius:8px;
+  background:var(--primary); color:#fff;
+  transition:background .15s ease;
+}
+.cl-btn:hover{ background:var(--primary-dark); }
+
+.cl-toolbar{
+  display:flex; align-items:center; gap:10px; margin-bottom:20px;
+}
+.cl-search{
+  flex:1; display:flex; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid var(--border); border-radius:9px;
+  padding:9px 12px;
+}
+.cl-search svg{ color:var(--ink-muted); flex-shrink:0; }
+.cl-search input{
+  border:none; outline:none; background:transparent; font-size:13.5px; color:var(--ink); width:100%;
+}
+.cl-count{ font-size:13px; color:var(--ink-muted); white-space:nowrap; }
+
+.cl-alert{
+  font-size:13px; padding:10px 12px; border-radius:8px; margin-bottom:18px;
+}
+.cl-alert--success{ background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+.cl-alert--error{ background:#fef2f2; color:#b3261e; border:1px solid #fecaca; }
+
+.cl-list{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  overflow:hidden;
+}
+
+.cl-row{
+  display:flex; align-items:center; gap:14px;
+  padding:14px 18px; border-bottom:1px solid var(--border);
+}
+.cl-row:last-child{ border-bottom:none; }
+
+.cl-row__avatar{
+  width:42px; height:42px; border-radius:50%; flex-shrink:0;
+  background:var(--pill-bg); color:var(--primary);
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; font-weight:600;
+  overflow:hidden; background-size:cover; background-position:center;
+}
+.cl-row__avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+.cl-row__main{ min-width:0; flex:1; }
+.cl-row__name{ font-size:14px; font-weight:600; color:var(--ink); }
+.cl-row__meta{
+  font-size:12.5px; color:var(--ink-muted);
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:2px;
+}
+.cl-row__meta span{ display:inline-flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.cl-row__actions{ display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.cl-icon-btn{
+  width:32px; height:32px; border-radius:7px; border:1px solid transparent;
+  display:flex; align-items:center; justify-content:center;
+  background:transparent; color:var(--ink-muted); cursor:pointer; text-decoration:none;
+  transition:background .15s ease, color .15s ease;
+}
+.cl-icon-btn:hover{ background:var(--pill-bg); color:var(--ink); }
+.cl-icon-btn--danger:hover{ background:#fef2f2; color:#b3261e; }
+
+.cl-empty{
+  text-align:center; padding:60px 20px; color:var(--ink-muted);
+}
+.cl-empty svg{ margin-bottom:14px; color:var(--border); }
+.cl-empty p{ font-size:14px; margin:0 0 18px; }
+
+@media (max-width: 620px){
+  .cl-row__meta{ flex-direction:column; align-items:flex-start; gap:2px; }
+  .cl-head{ flex-direction:column; align-items:flex-start; }
+}

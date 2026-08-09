@@ -1,0 +1,46 @@
+/*
+  pagination.css — styles for fragments/pagination.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/pagination.css
+*/
+
+.cm-pagination{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  margin:32px 0 8px;
+}
+
+.cm-pagination__nav{
+  display:flex; align-items:center; justify-content:center;
+  width:32px; height:32px; border-radius:8px;
+  color:var(--ink); text-decoration:none;
+  border:1px solid var(--border); background:var(--surface);
+  transition:background .15s ease, color .15s ease, border-color .15s ease;
+}
+.cm-pagination__nav:hover{ background:var(--pill-bg); color:var(--primary); }
+.cm-pagination__nav.is-disabled{
+  color:var(--ink-muted); opacity:.45; pointer-events:none;
+}
+
+.cm-pagination__list{
+  display:flex; align-items:center; gap:4px; list-style:none; margin:0; padding:0;
+}
+
+.cm-pagination__page{
+  display:flex; align-items:center; justify-content:center;
+  min-width:32px; height:32px; padding:0 6px; border-radius:8px;
+  font-size:13.5px; font-weight:600; color:var(--ink-muted); text-decoration:none;
+  transition:background .15s ease, color .15s ease;
+}
+.cm-pagination__page:hover{ background:var(--pill-bg); color:var(--ink); }
+.cm-pagination__page.is-active{ background:var(--primary); color:#fff; }
+
+.cm-pagination__ellipsis{
+  display:flex; align-items:center; justify-content:center;
+  min-width:24px; height:32px; color:var(--ink-muted); font-size:13.5px;
+}
+
+@media (max-width:480px){
+  .cm-pagination{ gap:4px; }
+  .cm-pagination__page{ min-width:28px; height:28px; font-size:13px; }
+  .cm-pagination__nav{ width:28px; height:28px; }
+}

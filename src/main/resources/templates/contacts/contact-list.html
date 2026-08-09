@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	th:replace="~{fragments/basis::layout(~{::contactListTitle},~{::contactListContent},~{::contactListCss})}">
+<head>
+  <meta charset="UTF-8">
+  <title th:fragment="contactListTitle">All contacts — Contact Manager</title>
+  
+  <link th:href="@{/css/contacts/contacts-list.css}" rel="stylesheet" th:fragment="contactListCss">
+  
+  </head>
+<body>
+
+  <main class="cl" th:fragment="contactListContent">
+    <div class="cl-head">
+      <div>
+        <h1 class="cl-head__title">All contacts</h1>
+        <p class="cl-head__sub">Everyone you've saved, in one place.</p>
+      </div>
+      <a th:href="@{/user/contacts/add}" class="cl-btn">+ Add contact</a>
+    </div>
+
+    <div class="cl-alert cl-alert--success" th:if="${successMessage}" th:text="${successMessage}">
+      Contact saved successfully.
+    </div>
+    <div class="cl-alert cl-alert--error" th:if="${errorMessage}" th:text="${errorMessage}">
+      Something went wrong.
+    </div>
+
+    <!-- Search -->
+    <div class="cl-toolbar">
+      <form class="cl-search" th:action="@{/user/contacts}" method="get" style="flex:1;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" name="keyword" placeholder="Search by name, email, or phone..."
+        	th:if="${keyword}">
+      </form>
+      <span class="cl-count" th:if="${contactsOfUser != null}" th:text="${#lists.size(contactsOfUser)} + ' contact' + (${#lists.size(contactsOfUser)} == 1 ? '' : 's')">0 contacts</span>
+    </div>
+
+	
+    <!-- Populated list -->
+    <div class="cl-list" th:if="${contacts != null and !contacts.isEmpty()}">
+      
+      <div class="cl-row" th:each="contact : ${contacts}" >
+        <div class="cl-row__avatar"
+             th:style="${contact.image != null} ? 'background-image:url(' + @{'/'+${contact.image}} + ')' : ''">
+          <span th:if="${contact.image == null}" th:text="${#strings.substring(contact.name,0,1)}">A</span>
+      </div>
+        
+        <div class="cl-row__main">
+          <div class="cl-row__name" th:text="${contact.name}">Contact name</div>
+          <div class="cl-row__meta">
+            <span th:if="${contact.contactNumber}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span th:text="${contact.contactNumber}">+91 98765 43210</span>
+            </span>
+            <span th:if="${contact.email}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg>
+              <span th:text="${contact.email}">jane@example.com</span>
+            </span>
+            <span th:if="${contact.work}" th:text="${contact.work}">Product Designer at Acme</span>
+          </div>
+        </div>
+
+        <div class="cl-row__actions">
+          <a th:href="@{'/user/contacts/' + ${contact.id}}" class="cl-icon-btn" title="View">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </a>
+          <a th:href="@{'/user/contacts/' + ${contact.id} + '/edit'}" class="cl-icon-btn" title="Edit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </a>
+          <form th:action="@{'/user/contacts/' + ${contact.id} + '/delete'}" method="post"
+                onsubmit="return confirm('Delete this contact? This can\'t be undone.');" style="display:contents">
+            <button type="submit" class="cl-icon-btn cl-icon-btn--danger" title="Delete">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+	
+	
+	<th:block  th:replace="~{fragments/pagination::pagination(${currentPage}, 
+	${totalPages},'/user/contacts')}">
+	</th:block>
+    
+    
+    <!-- Empty state: no contacts at all yet -->
+    <div class="cl-list" th:if="${contacts != null and contacts.isEmpty() and (keyword == null or keyword.isBlank())}">
+      <div class="cl-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <p>You haven't added any contacts yet.</p>
+        <a th:href="@{/contacts/add}" class="cl-btn">+ Add your first contact</a>
+      </div>
+    </div>
+
+    <!-- Empty state: search returned nothing -->
+    <div class="cl-list" th:if="${contacts != null and contacts.isEmpty() and keyword != null and !keyword.isBlank()}">
+      <div class="cl-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p>No contacts match "<span th:text="${keyword}"></span>".</p>
+        <a th:href="@{/contacts}" class="cl-btn">Clear search</a>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

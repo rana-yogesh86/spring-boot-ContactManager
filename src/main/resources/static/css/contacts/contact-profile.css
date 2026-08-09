@@ -1,0 +1,79 @@
+/*
+  contact-profile.css — styles for templates/contacts/detail.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/contacts/contact-profile.css
+*/
+
+.cd{ max-width:640px; margin:0 auto; padding:40px 20px 80px; }
+
+.cd-back{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13px; font-weight:600; color:var(--ink-muted);
+  text-decoration:none; margin-bottom:20px;
+}
+.cd-back:hover{ color:var(--ink); }
+
+.cd-alert{
+  font-size:13px; padding:10px 12px; border-radius:8px; margin-bottom:18px;
+}
+.cd-alert--success{ background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+.cd-alert--error{ background:#fef2f2; color:#b3261e; border:1px solid #fecaca; }
+
+.cd-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden;
+}
+
+.cd-header{
+  display:flex; align-items:center; gap:16px;
+  padding:26px 28px; border-bottom:1px solid var(--border);
+}
+.cd-avatar{
+  width:64px; height:64px; border-radius:50%; flex-shrink:0;
+  background:var(--pill-bg); color:var(--primary);
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; font-weight:600;
+  overflow:hidden; background-size:cover; background-position:center;
+}
+.cd-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+.cd-header__name{ font-size:20px; font-weight:700; color:var(--ink-strong); margin:0 0 3px; letter-spacing:-0.01em; }
+.cd-header__work{ font-size:13.5px; color:var(--ink-muted); margin:0; }
+
+.cd-actions{ display:flex; gap:8px; padding:16px 28px; border-bottom:1px solid var(--border); }
+.cd-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13.5px; font-weight:600; text-decoration:none; cursor:pointer;
+  padding:8px 14px; border-radius:7px; border:1px solid transparent;
+  transition:background .15s ease, border-color .15s ease;
+  font-family:inherit;
+}
+.cd-btn--primary{ background:var(--primary); color:#fff; }
+.cd-btn--primary:hover{ background:var(--primary-dark); }
+.cd-btn--ghost{ background:var(--surface); color:var(--ink); border-color:var(--border); }
+.cd-btn--ghost:hover{ background:var(--pill-bg); }
+.cd-btn--danger{ background:var(--surface); color:#b3261e; border-color:#fecaca; }
+.cd-btn--danger:hover{ background:#fef2f2; }
+
+.cd-body{ padding:24px 28px; }
+
+.cd-field{ display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); }
+.cd-field:last-child{ border-bottom:none; }
+.cd-field__icon{
+  width:32px; height:32px; border-radius:8px; background:var(--pill-bg); color:var(--primary);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.cd-field__label{ font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-muted); margin:0 0 2px; }
+.cd-field__value{ font-size:14px; color:var(--ink); word-break:break-word; }
+.cd-field__value a{ color:var(--primary); text-decoration:none; }
+.cd-field__value a:hover{ text-decoration:underline; }
+.cd-field__value--empty{ color:var(--ink-muted); font-style:italic; }
+
+.cd-meta{
+  font-size:12px; color:var(--ink-muted); padding:14px 28px; border-top:1px solid var(--border);
+  background:var(--surface-muted);
+}
+
+@media (max-width: 520px){
+  .cd-header{ flex-direction:column; align-items:flex-start; text-align:left; }
+  .cd-actions{ flex-wrap:wrap; }
+}

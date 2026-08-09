@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/basis::layout(~{::userDashTitle} , ~{::userDashContent},~{::userDashCss})}"
+      >
+	<head>
+		<meta charset="UTF-8">
+		<title th:fragment="userDashTitle">Dashboard — Contact Manager</title>
+		<link th:href="@{/css/user/dashboard.css}" rel="stylesheet"
+			th:fragment="userDashCss">
+	</head>
+	<body>
+	
+	
+		<main class="dash" th:fragment="userDashContent">
+	
+			<!--
+	      Controller should pass:
+	        user            -> the logged-in User entity
+	        totalContacts   -> long, contactService.countByOwner(user)
+	        addedThisWeek   -> long, contacts created in last 7 days
+	        totalGroups     -> long, optional
+	        recentContacts  -> List<Contact>, last 5 added, most recent first
+	    -->
+			<div class="dash-header">
+				<div>
+					<h1 class="dash-header__greeting">
+						Welcome <span th:text="', ' + ${#authentication.principal.user.name}"></span>
+						🍻
+				</h1>
+					<p class="dash-header__sub">Here's what's happening with your
+						contacts.</p>
+				</div>
+				<a th:href="@{/user/contacts/add}" class="dash-btn">+ Add contact</a>
+			</div>
+			
+			<div class="dash-stats">
+				<div class="dash-stat">
+					<div class="dash-stat__icon">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+							<circle cx="9" cy="7" r="4" />
+							<path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+							<path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+					</div>
+					<div class="dash-stat__value" th:text="${totalContacts ?: 0}">0</div>
+					<div class="dash-stat__label">Total contacts</div>
+				</div>
+				<div class="dash-stat">
+					<div class="dash-stat__icon">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path d="M12 5v14M5 12h14" /></svg>
+					</div>
+					<div class="dash-stat__value" th:text="${addedThisWeek ?: 0}">0</div>
+					<div class="dash-stat__label">Added this week</div>
+				</div>
+				<div class="dash-stat">
+					<div class="dash-stat__icon">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path d="M20 7h-9m0 0 3-3m-3 3 3 3M4 17h9m0 0-3 3m3-3-3-3" /></svg>
+					</div>
+					<div class="dash-stat__value" th:text="${totalGroups ?: 0}">0</div>
+					<div class="dash-stat__label">Groups</div>
+				</div>
+			</div>
+	
+			<section class="dash-section">
+				<div class="dash-section__head">
+					<h2 class="dash-section__title">Recently added</h2>
+					<a th:href="@{/user/contacts}" class="dash-section__link">View all →</a>
+				</div>
+	
+				<div class="dash-table"
+					th:if="${recentContacts != null and !recentContacts.isEmpty()}">
+					<div class="dash-row" th:each="contact : ${recentContacts}">
+						<div class="dash-row__avatar"
+							th:text="${#strings.substring(contact.name,0,1)}">A</div>
+						<div>
+							<div class="dash-row__name" th:text="${contact.name}">Contact
+								name</div>
+							<div class="dash-row__meta" th:text="${contact.email}">email@example.com</div>
+						</div>
+						<div class="dash-row__spacer"></div>
+						<a th:href="@{'/user/contacts/' + ${contact.id}}" class="dash-row__link">View</a>
+					</div>
+				</div>
+	
+				<div class="dash-table"
+					th:if="${recentContacts == null or recentContacts.isEmpty()}">
+					<p class="dash-empty">No contacts yet — add your first one to
+						see it here.</p>
+				</div>
+			</section>
+	
+			<section class="dash-section">
+				<div class="dash-section__head">
+					<h2 class="dash-section__title">Quick actions</h2>
+				</div>
+				<div class="dash-quick">
+					<a th:href="@{/user/contacts/add}">
+						<div class="dash-quick__icon">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<path d="M12 5v14M5 12h14" /></svg>
+						</div> <span class="dash-quick__label">Add a contact</span>
+					</a> <a th:href="@{/user/contacts}">
+						<div class="dash-quick__icon">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<circle cx="11" cy="11" r="7" />
+								<line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+						</div> <span class="dash-quick__label">Search contacts</span>
+					</a> <a th:href="@{/user/profile}">
+						<div class="dash-quick__icon">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+								<circle cx="12" cy="7" r="4" /></svg>
+						</div> <span class="dash-quick__label">Edit your profile</span>
+					</a>
+				</div>
+			</section>
+	
+		</main>
+	
+		<div th:replace="~{fragments/footer :: footer}"></div>
+	
+	</body>
+</html>

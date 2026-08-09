@@ -1,0 +1,85 @@
+/*
+  help.css — styles for templates/help.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/help.css
+*/
+
+.help{ max-width:720px; margin:0 auto; padding:56px 20px 80px; }
+
+.help-head{ text-align:center; margin-bottom:40px; }
+.help-head__eyebrow{
+  display:inline-block; font-size:12.5px; font-weight:600; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--primary); background:var(--pill-bg);
+  padding:4px 10px; border-radius:99px; margin-bottom:14px;
+}
+.help-head__title{ font-size:30px; font-weight:700; letter-spacing:-0.02em; margin:0 0 10px; color:var(--ink-strong); }
+.help-head__lede{ font-size:15px; line-height:1.6; color:var(--ink-muted); max-width:48ch; margin:0 auto; }
+
+.help-search{
+  display:flex; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  padding:11px 14px; margin:28px auto 0; max-width:480px;
+}
+.help-search svg{ color:var(--ink-muted); flex-shrink:0; }
+.help-search input{
+  border:none; outline:none; background:transparent; font-size:14px; color:var(--ink); width:100%;
+}
+
+.help-topics{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;
+  margin:36px 0 44px;
+}
+.help-topic{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:16px; text-align:center; text-decoration:none; color:var(--ink);
+  transition:border-color .15s ease, background .15s ease;
+}
+.help-topic:hover{ border-color:var(--primary); background:var(--pill-bg); }
+.help-topic-icon{
+  width:32px; height:32px; border-radius:8px; background:var(--pill-bg); color:var(--primary);
+  display:flex; align-items:center; justify-content:center; margin:0 auto 10px;
+}
+.help-topic span{ font-size:13px; font-weight:600; }
+
+.help-section-title{
+  font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--ink-muted); margin:0 0 14px;
+}
+
+.help-faq{ margin-bottom:44px; }
+.help-item{
+  background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  margin-bottom:8px; overflow:hidden;
+}
+.help-item summary{
+  list-style:none; cursor:pointer; padding:14px 18px;
+  font-size:14px; font-weight:600; color:var(--ink);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.help-item summary::-webkit-details-marker{ display:none; }
+.help-item summary::after{
+  content:'+'; font-size:18px; font-weight:400; color:var(--ink-muted); flex-shrink:0;
+  transition:transform .15s ease;
+}
+.help-item[open] summary::after{ transform:rotate(45deg); }
+.help-item p{
+  margin:0; padding:0 18px 16px; font-size:13.5px; line-height:1.6; color:var(--ink-muted);
+}
+
+.help-cta{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  background:var(--ink-strong); border-radius:14px; padding:26px 28px;
+  color:#fff; flex-wrap:wrap;
+}
+.help-cta h3{ font-size:16px; margin:0 0 4px; font-weight:600; }
+.help-cta p{ font-size:13px; margin:0; color:#9ca3af; }
+.help-cta a{
+  text-decoration:none; background:var(--primary); color:#fff; font-weight:600; font-size:14px;
+  padding:10px 18px; border-radius:8px; white-space:nowrap; transition:background .15s ease;
+}
+.help-cta a:hover{ background:var(--primary-dark); }
+
+@media (max-width: 560px){
+  .help-topics{ grid-template-columns:1fr; }
+  .help-cta{ flex-direction:column; align-items:flex-start; }
+}

@@ -1,0 +1,87 @@
+/*
+  navbar.css — styles for fragments/navbar.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/navbar.css
+*/
+
+.cm-navbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.cm-navbar__inner{
+  max-width:var(--max-width); margin:0 auto; padding:0 20px;
+  height:var(--nav-height);
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+}
+
+.cm-brand{ display:flex; align-items:center; gap:9px; text-decoration:none; }
+.cm-brand__mark{
+  width:30px; height:30px; border-radius:8px;
+  background:var(--primary); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:600; font-size:14px;
+}
+.cm-brand__name{ font-weight:600; font-size:15.5px; color:var(--ink); }
+
+.cm-links{ display:flex; align-items:center; gap:2px; flex:1; }
+.cm-links a{
+  text-decoration:none; color:var(--ink-muted); font-size:14px; font-weight:500;
+  padding:8px 12px; border-radius:6px; transition:background .15s ease, color .15s ease;
+}
+.cm-links a:hover{ background:var(--pill-bg); color:var(--ink); }
+.cm-links a.is-active{ color:var(--primary); background:var(--pill-bg); }
+
+.cm-actions{ display:flex; align-items:center; gap:10px; }
+.cm-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13.5px; font-weight:600; text-decoration:none;
+  padding:8px 14px; border-radius:7px; border:1px solid transparent;
+  background:var(--primary); color:#fff;
+  transition:background .15s ease;
+}
+.cm-btn:hover{ background:var(--primary-dark); }
+.cm-btn--ghost{ background:var(--surface); color:var(--ink); border:1px solid var(--border); }
+.cm-btn--ghost:hover{ background:var(--pill-bg); }
+
+/* Profile icon/avatar link, sits next to the other nav actions */
+.cm-avatar-btn{
+  display:flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:50%;
+  background:var(--pill-bg); color:var(--primary);
+  text-decoration:none; flex:none;
+  border:1px solid transparent;
+  transition:background .15s ease, border-color .15s ease;
+}
+.cm-avatar-btn:hover{ background:var(--primary); color:#fff; }
+.cm-avatar-btn.is-active{ border-color:var(--primary); }
+.cm-avatar-btn__initial{
+  font-size:13px; font-weight:700; text-transform:uppercase; line-height:1;
+}
+
+#profileImage {
+	width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.cm-burger{
+  display:none; background:none; border:none; cursor:pointer;
+  width:34px; height:34px; align-items:center; justify-content:center; border-radius:8px;
+}
+.cm-burger:hover{ background:var(--pill-bg); }
+
+@media (max-width: 640px){
+  .cm-links{ display:none; }
+  .cm-burger{ display:flex; }
+  .cm-navbar.is-mobile-open .cm-links{
+    display:flex; flex-direction:column; align-items:stretch; gap:2px;
+    position:absolute; top:var(--nav-height); left:0; right:0;
+    background:var(--surface); border-bottom:1px solid var(--border);
+    padding:10px 16px 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .cm-links a, .cm-btn, .cm-avatar-btn{ transition:none; }
+}

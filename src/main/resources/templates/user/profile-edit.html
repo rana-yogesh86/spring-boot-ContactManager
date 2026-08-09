@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/basis :: layout(~{::profileTitle}, ~{::profileContent}, ~{::profileCss})}">
+
+<head>
+	<meta charset="UTF-8" />
+	<title th:fragment="profileTitle">Edit Profile - Contact Manager</title>
+	<link rel="stylesheet" th:href="@{/css/index.css}" />
+	<link rel="stylesheet" th:href="@{/css/user/profile-edit.css}" th:fragment="profileCss" />
+</head>
+<body>
+	<div th:fragment="profileContent">
+
+		<!-- Pass th:object from your controller, e.g.
+		     model.addAttribute("profileForm", new ProfileForm(currentUser));
+		     profileForm.currentImage should be the current photo URL, or null/blank if none set. -->
+
+		<!-- Success / error banners: wire these to your redirect attributes -->
+		<div class="profile-alert profile-alert--success" th:if="${successMessage}">
+			<span th:text="${successMessage}">Profile updated.</span>
+		</div>
+		<div class="profile-alert profile-alert--error" th:if="${errorMessage}">
+			<span th:text="${errorMessage}">Something went wrong.</span>
+		</div>
+		<!-- enctype is required for the avatar file upload -->
+		<form th:action="@{/user/update}" th:object="${profileForm}" method="post"
+			enctype="multipart/form-data" class="profile-form" novalidate>
+	
+			<div class="profile-layout">
+				<input type="hidden" th:field="*{currentPassword}">
+				<input type="hidden" th:field="*{currentImage}">
+				<!-- Left: identity card with the primary photo-upload action -->
+				<aside class="profile-card profile-card--identity">
+
+					<div class="profile-avatar profile-avatar--lg" id="profileAsideAvatar">
+						<img th:if="${profileForm.currentImage}" th:src="@{'/'+${profileForm.currentImage}}"
+							id="profileAsideAvatarImg" />
+						<span id="profileAsideAvatarInitial" th:text="${#strings.substring(profileForm.name, 0, 1)}"
+							th:style="${profileForm.currentImage} ? 'display:none' : ''">A</span>
+					</div>
+
+					<h2 class="profile-identity__name" th:text="${profileForm.name}">Jane Doe</h2>
+					<p class="profile-identity__role" th:text="${profileForm.email}">jane@example.com</p>
+
+					<label for="avatarInput" class="profile-upload-btn">
+						<span th:text="${profileForm.currentImage != null} ? 'Change photo' : 'Upload new photo'">Upload new photo</span>
+					</label>
+					<input type="file" id="avatarInput" name="avatarFile" th:field="*{newImage}" 
+					accept="image/png, image/jpeg, image/webp"
+						onchange="cmPreviewAvatar(this)" />
+					<p class="profile-upload-hint">JPG, PNG or WEBP &middot; Max 2MB</p>
+					<button type="button" class="profile-upload-remove" id="cmRemoveAvatarBtn"
+						th:style="${profileForm.currentImage} ? '' : 'display:none'" onclick="cmRemoveAvatar()">Remove photo</button>
+					<input type="hidden" name="removeAvatar" id="cmRemoveAvatarFlag" value="false" />
+
+					<div class="profile-tip">
+						Tip: a clear, friendly photo helps your contacts recognize
+						you at a glance.
+					</div>
+
+					<p class="profile-identity__since" th:if="${profileForm.registeredOn}">
+						Member since <span th:text="${#temporals.format(profileForm.registeredOn, 'MMM yyyy')}">Jan 2025</span>
+					</p>
+				</aside>
+
+				<!-- Right: tabbed edit form -->
+				<div class="profile-card profile-card--form">
+
+					<h2 class="profile-form__title">Edit profile</h2>
+
+					<div class="profile-tabs" role="tablist">
+						<button type="button" class="profile-tabs__btn is-active" data-tab="info"
+							onclick="cmShowTab('info')" role="tab" aria-selected="true">User info</button>
+						<button type="button" class="profile-tabs__btn" data-tab="security"
+							onclick="cmShowTab('security')" role="tab" aria-selected="false">Security</button>
+					</div>
+
+					<div class="profile-tab-panel is-active" id="tab-info">
+
+						<div class="profile-field-row">
+							<div class="profile-field">
+								<label for="name">Full name</label>
+								<input type="text" id="name" th:field="*{name}" placeholder="Jane Doe" />
+								<span class="profile-field__error" th:if="${#fields.hasErrors('name')}"
+									th:errors="*{name}">Name error</span>
+							</div>
+
+							<div class="profile-field">
+								<label for="email">Email address</label>
+								<input type="email" id="email" th:field="*{email}" 
+								placeholder="jane@example.com" readonly/>
+								<span class="profile-field__error" th:if="${#fields.hasErrors('email')}"
+									th:errors="*{email}">Email error</span>
+							</div>
+						</div>
+
+						<div class="profile-field">
+							<label for="phone">Phone</label>
+							<input type="tel" id="phone" th:field="*{phone}" maxlength="10" placeholder="+1 555 000 0000"/>
+							<span class="profile-field__error" th:if="${#fields.hasErrors('phone')}"
+								th:errors="*{phone}">Phone error</span>
+						</div>
+
+						<div class="profile-field">
+							<label for="bio">About</label>
+							<textarea id="bio" th:field="*{bio}" rows="3"
+								placeholder="A short note visible on your account (optional)"></textarea>
+						</div>
+					</div>
+
+					<div class="profile-tab-panel" id="tab-security">
+
+						<p class="profile-form__hint">Leave these blank to keep your current password.</p>
+
+						<div class="profile-field-row">
+							<div class="profile-field">
+								<label for="newPassword">New password</label>
+								<input type="password" id="newPassword" th:field="*{newPassword}" 
+								placeholder="••••••••" />
+								<span class="profile-field__error" th:if="${#fields.hasErrors('newPassword')}"
+									th:errors="*{newPassword}">Password error</span>
+							</div>
+
+							<div class="profile-field">
+								<label for="confirmPassword">Confirm new password</label>
+								<input type="password" id="confirmPassword" th:field="*{confirmPassword}" 
+								placeholder="••••••••" />
+								<span class="profile-field__error" th:if="${#fields.hasErrors('confirmPassword')}"
+									th:errors="*{confirmPassword}">Confirm password error</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="profile-form__actions">
+						<button type="submit" class="home-btn home-btn--primary">Update info</button>
+						<a th:href="@{/user/profile}" class="home-btn home-btn--ghost">Cancel</a>
+					</div>
+
+				</div>
+			</div>
+		</form>
+		
+		<script th:inline="none">
+		function cmShowTab(name) {
+			document.querySelectorAll('.profile-tabs__btn').forEach(function (btn) {
+				var active = btn.getAttribute('data-tab') === name;
+				btn.classList.toggle('is-active', active);
+				btn.setAttribute('aria-selected', active ? 'true' : 'false');
+			});
+			document.querySelectorAll('.profile-tab-panel').forEach(function (panel) {
+				panel.classList.toggle('is-active', panel.id === 'tab-' + name);
+			});
+		}
+
+		function cmPreviewAvatar(input) {
+			if (!(input.files && input.files[0])) return;
+			var file = input.files[0];
+
+			var maxBytes = 2 * 1024 * 1024;
+			if (file.size > maxBytes) {
+				alert('Please choose an image under 2MB.');
+				input.value = '';
+				return;
+			}
+
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				var img = document.getElementById('profileAsideAvatarImg');
+				var initial = document.getElementById('profileAsideAvatarInitial');
+				if (!img) {
+					img = document.createElement('img');
+					img.id = 'profileAsideAvatarImg';
+					img.alt = 'Profile photo';
+					document.getElementById('profileAsideAvatar').appendChild(img);
+				}
+				img.src = e.target.result;
+				img.style.display = '';
+				if (initial) initial.style.display = 'none';
+			};
+			reader.readAsDataURL(file);
+
+			document.getElementById('cmRemoveAvatarBtn').style.display = '';
+			document.getElementById('cmRemoveAvatarFlag').value = 'false';
+		}
+
+		function cmRemoveAvatar() {
+			var input = document.getElementById('avatarInput');
+			input.value = '';
+
+			var img = document.getElementById('profileAsideAvatarImg');
+			var initial = document.getElementById('profileAsideAvatarInitial');
+			if (img) img.style.display = 'none';
+			if (initial) initial.style.display = '';
+
+			document.getElementById('cmRemoveAvatarBtn').style.display = 'none';
+			document.getElementById('cmRemoveAvatarFlag').value = 'true';
+		}
+	</script>
+	</div>
+
+	
+</body>
+</html>

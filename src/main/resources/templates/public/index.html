@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+	th:replace="~{fragments/basis :: layout(~{::indexTitle}, ~{::indexContent} , ~{::indexCss})}">
+	
+<head>
+	<meta charset="UTF-8" />
+	<title th:fragment="indexTitle">Home - Contact Manager</title>
+	<link rel="stylesheet" th:href="@{/css/index.css}" th:fragment="indexCss"/>	
+	
+</head>
+<body>
+	<div th:fragment="indexContent">
+		<section class="home-hero">
+			<span class="home-hero__eyebrow">Contact Manager</span>
+			<h1 class="home-hero__title">All your contacts, organized in one
+				place</h1>
+			<p class="home-hero__lede">Stop digging through spreadsheets and
+				scattered notes. Add, search, and update your contacts in seconds —
+				built to be fast and get out of your way.</p>
+			<div class="home-hero__actions">
+				<a th:href="@{/contacts/add}" class="home-btn home-btn--primary">+
+					Add your first contact</a> <a th:href="@{/contacts}"
+					class="home-btn home-btn--ghost">View all contacts</a>
+			</div>
+		</section>
+
+		<!-- Optional: pass these attributes from your controller, e.g.
+       model.addAttribute("totalContacts", contactService.count()); -->
+		<section class="home-stats">
+			<div class="home-stats__card">
+				<div class="home-stats__value" th:text="${totalContacts ?: 0}">0</div>
+				<div class="home-stats__label">Total contacts</div>
+			</div>
+			<div class="home-stats__card">
+				<div class="home-stats__value" th:text="${addedThisMonth ?: 0}">0</div>
+				<div class="home-stats__label">Added this month</div>
+			</div>
+			<div class="home-stats__card">
+				<div class="home-stats__value" th:text="${totalGroups ?: 0}">0</div>
+				<div class="home-stats__label">Groups</div>
+			</div>
+		</section>
+
+		<section class="home-features">
+			<p class="home-features__title">Why use it</p>
+			<div class="home-features__grid">
+				<div class="home-feature">
+					<div class="home-feature-icon">
+						<svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path d="M12 5v14M5 12h14" /></svg>
+					</div>
+					<h3>Add in seconds</h3>
+					<p>One simple form for name, phone, email, and notes — no
+						clutter, no required fields you don't need.</p>
+				</div>
+				<div class="home-feature">
+					<div class="home-feature-icon">
+						<svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<circle cx="11" cy="11" r="7" />
+							<line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+					</div>
+					<h3>Find instantly</h3>
+					<p>Search by name, phone, or email and get results as you type.</p>
+				</div>
+				<div class="home-feature">
+					<div class="home-feature-icon">
+						<svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path
+								d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+							<path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+					</div>
+					<h3>Always up to date</h3>
+					<p>Edit or remove any contact in a couple of clicks whenever
+						details change.</p>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

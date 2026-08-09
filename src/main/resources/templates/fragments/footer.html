@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Footer fragment (not rendered standalone)</title></head>
+<body>
+
+
+<footer class="cm-footer" th:fragment="footer">
+  <div class="cm-footer__inner">
+
+    <div class="cm-footer__brand">
+      <span class="cm-footer__mark">CM</span>
+      <span class="cm-footer__text">Contact Manager</span>
+    </div>
+
+    <nav class="cm-footer__links">
+    	<p>
+    		<a th:href="@{/}">Home</a> 	.
+      		<a th:href="@{/contact-us}">Reach Us</a> .
+      		<a th:href="@{/help}">Help</a>
+    	</p>
+     
+    </nav>
+
+    <span class="cm-footer__meta">
+      &copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> Contact Manager. Built with Spring Boot.
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>

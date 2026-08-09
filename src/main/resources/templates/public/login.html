@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	th:replace="~{fragments/basis :: layout(~{::loginTitle},~{::loginContent},~{::loginCss})}">
+<head>
+  <meta charset="UTF-8">
+  <title th:fragment="loginTitle">Log in — Contact Manager</title>
+  <link rel="stylesheet" th:href="@{/css/login.css}" th:fragment="loginCss" />
+</head>
+<body>
+
+  <div class="auth-wrap" th:fragment="loginContent">
+    <div class="auth-card">
+      <h1 class="auth-card__title">Welcome back</h1>
+      <p class="auth-card__subtitle">Log in to manage your contacts.</p>
+
+      <!-- Spring Security appends ?error / ?logout to the login URL by default -->
+      <div class="auth-alert auth-alert--error" th:if="${param.error}">
+        Incorrect email or password. Please try again.
+      </div>
+      <div class="auth-alert auth-alert--success" th:if="${param.logout}">
+        You've been logged out successfully.
+      </div>
+
+      <!--
+        action="/login" + field names "username"/"password" match Spring Security's
+        default form-login setup exactly — no changes needed once security is added.
+      -->
+      <form novalidate="novalidate" th:action="@{/process-login}" method="post" >
+
+		<div class="auth-field" >
+			<label for="username">Email</label> 
+			<input type="email"
+				id="username" name="username" 
+				placeholder="you@example.com"
+				required autofocus>
+		</div>
+
+		<div class="auth-field">
+			<label for="password">Password</label> 
+			<input type="password"
+				id="password" name="password" 
+				placeholder="••••••••" required>
+		</div>
+
+		<div class="auth-row">
+          <label class="auth-remember">
+            <input type="checkbox" name="remember-me">
+            Remember me
+          </label>
+          <a th:href="@{/forgot-password}">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="auth-submit">Log in</button>
+      </form>
+
+      <p class="auth-footer">
+        Don't have an account? <a th:href="@{/sign-up}">Sign up</a>
+      </p>
+    </div>
+  </div>
+
+
+</body>
+</html>

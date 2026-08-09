@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/basis :: layout(~{::profileViewTitle}, ~{::profileViewContent}, ~{::profileViewCss})}">
+
+<head>
+	<meta charset="UTF-8" />
+	<title th:fragment="profileViewTitle">Your Profile - Contact Manager</title>
+	<link rel="stylesheet" th:href="@{/css/user/profile.css}" th:fragment="profileViewCss" />
+</head>
+<body>
+	<div th:fragment="profileViewContent">
+
+		<!-- Pass th:object / model attributes from your controller, e.g.
+		     model.addAttribute("user", new user(currentUser));
+		     model.addAttribute("activePage", "profile"); -->
+
+		<section class="profile-hero">
+			<span class="home-hero__eyebrow" >Your Account</span>
+			<h1 class="home-hero__title" th:if="${user.name}" th:text="${user.name}">Your profile</h1>
+			<p class="home-hero__lede">A quick look at the details on your
+				account. Head to edit if anything needs updating.</p>
+				
+			
+		</section>
+
+		<div class="profile-alert profile-alert--success" th:if="${success}">
+			<span th:text="${success}">Profile updated.</span>
+		</div>
+
+		<div class="profile-layout">
+
+			<!-- Left: avatar / identity summary card -->
+			<aside class="profile-card profile-card--identity">
+				<div class="profile-avatar profile-avatar--lg" id="profileAsideAvatar">
+						<img th:if="${user.image}" th:src="@{'/'+${user.image}}"
+							id="profileAsideAvatarImg" />
+						<span id="profileAsideAvatarInitial" th:text="${#strings.substring(user.name, 0, 1)}"
+							th:style="${user.image} ? 'display:none' : ''">A</span>
+				</div>
+				<h2 class="profile-identity__name" th:text="${user.name}">Jane Doe</h2>
+				<p class="profile-identity__meta" th:text="${user.email}">jane@example.com</p>
+			
+				<p class="profile-identity__since" th:if="${user.registeredOn}">
+					Member since <span th:text="${#temporals.format(user.registeredOn, 'MMM yyyy')}">Jan 2025</span>
+				</p>
+			</aside>
+
+			<!-- Right: read-only detail card -->
+			<div class="profile-card profile-card--form">
+
+				<h3 class="profile-form__section-title">Basic information</h3>
+
+				<dl class="profile-detail-list">
+					<div class="profile-detail-row">
+						<dt>Full name</dt>
+						<dd th:text="${user.name}">Jane Doe</dd>
+					</div>
+					<div class="profile-detail-row">
+						<dt>Email</dt>
+						<dd th:text="${user.email}">jane@example.com</dd>
+					</div>
+					<div class="profile-detail-row">
+						<dt>Phone</dt>
+						<dd th:text="${user.phone ?: '—'}">+1 555 000 0000</dd>
+					</div>
+					<div class="profile-detail-row">
+						<dt>About</dt>
+						<dd th:text="${user.bio ?: '—'}">A short note visible on your account.</dd>
+					</div>
+				</dl>
+
+				<hr class="profile-divider" />
+
+				<div class="profile-form__actions">
+					<a th:href="@{/user/edit}" class="profile-btn profile-btn--primary">Edit profile</a>
+					<a th:href="@{/contacts}" class="profile-btn profile-btn--ghost">Back to contacts</a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

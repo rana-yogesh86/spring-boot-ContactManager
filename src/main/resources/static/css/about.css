@@ -1,0 +1,57 @@
+/*
+  about.css — styles for templates/about.html
+  Depends on tokens defined in common.css (load common.css first).
+  Path: src/main/resources/static/css/about.css
+*/
+
+.about{ max-width:760px; margin:0 auto; padding:56px 20px 80px; }
+
+.about__eyebrow{
+  display:inline-block; font-size:12.5px; font-weight:600; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--primary); background:var(--pill-bg);
+  padding:4px 10px; border-radius:99px; margin-bottom:14px;
+}
+.about__title{ font-size:32px; font-weight:700; letter-spacing:-0.02em; margin:0 0 12px; color:var(--ink-strong); }
+.about__lede{ font-size:16px; line-height:1.65; color:var(--ink-muted); margin:0 0 40px; max-width:60ch; }
+
+.about__grid{
+  display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; margin-bottom:44px;
+}
+.about__card{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
+}
+.about__card-icon{
+  width:34px; height:34px; border-radius:9px; background:var(--pill-bg); color:var(--primary);
+  display:flex; align-items:center; justify-content:center; margin-bottom:12px;
+}
+.about__card h3{ font-size:15px; font-weight:600; margin:0 0 6px; color:var(--ink-strong); }
+.about__card p{ font-size:13.5px; line-height:1.55; color:var(--ink-muted); margin:0; }
+
+.about__section-title{
+  font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--ink-muted); margin:0 0 14px;
+}
+
+.about__stack{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:44px; }
+.about__badge{
+  font-size:13px; font-weight:500; color:#374151; background:var(--surface);
+  border:1px solid var(--border); padding:6px 12px; border-radius:8px;
+}
+
+.about__cta{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  background:var(--ink-strong); border-radius:14px; padding:28px 28px;
+  color:#fff; flex-wrap:wrap;
+}
+.about__cta h3{ font-size:18px; margin:0 0 4px; font-weight:600; }
+.about__cta p{ font-size:13.5px; margin:0; color:#9ca3af; }
+.about__cta a{
+  text-decoration:none; background:var(--primary); color:#fff; font-weight:600; font-size:14px;
+  padding:10px 18px; border-radius:8px; white-space:nowrap; transition:background .15s ease;
+}
+.about__cta a:hover{ background:var(--primary-dark); }
+
+@media (max-width: 560px){
+  .about__grid{ grid-template-columns:1fr; }
+  .about__cta{ flex-direction:column; align-items:flex-start; }
+}

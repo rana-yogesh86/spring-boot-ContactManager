@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{fragments/basis::layout(~{::contactProfTitle} , ~{::contactProfContent},~{::contactProfCss})}">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${contact.name} + ' — Contact Manager'" 
+  	th:fragment="contactProfTitle">Contact — Contact Manager</title>
+  <link th:href="@{/css/contacts/contact-profile.css}" rel="stylesheet" th:fragment="contactProfCss">
+  
+</head>
+<body>
+
+
+  <main class="cd" th:fragment="contactProfContent">
+
+    <a th:href="@{/contacts}" class="cd-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to all contacts
+    </a>
+
+    <div class="cd-alert cd-alert--success" th:if="${successMessage}" th:text="${successMessage}">
+      Contact updated successfully.
+    </div>
+    <div class="cd-alert cd-alert--error" th:if="${errorMessage}" th:text="${errorMessage}">
+      Something went wrong.
+    </div>
+
+    <div class="cd-card">
+
+      <div class="cd-header">
+        <div class="cd-avatar" th:style="${contact.image != null} ? 'background-image:url(' + @{'/'+${contact.image}} + ')' : ''">
+          <span th:if="${contact.image == null}" th:text="${#strings.substring(contact.name,0,1)}">A</span>
+        </div>
+        <div>
+          <h1 class="cd-header__name" th:text="${contact.name}">Contact name</h1>
+          <p class="cd-header__work" th:if="${contact.work}" th:text="${contact.work}">Work / role</p>
+        </div>
+      </div>
+
+      <div class="cd-actions">
+        <a th:href="@{'/contacts/' + ${contact.id} + '/edit'}" class="cd-btn cd-btn--primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </a>
+        <form th:action="@{'/contacts/' + ${contact.id} + '/delete'}" method="post"
+              onsubmit="return confirm('Delete this contact? This can\'t be undone.');" style="display:contents">
+          <button type="submit" class="cd-btn cd-btn--danger">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+            Delete
+          </button>
+        </form>
+      </div>
+
+      <div class="cd-body">
+
+        <div class="cd-field">
+          <div class="cd-field__icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <p class="cd-field__label">Phone</p>
+            <p class="cd-field__value">
+              <a th:if="${contact.contactNumber}" th:href="'tel:' + ${contact.contactNumber}" th:text="${contact.contactNumber}">+91 98765 43210</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="cd-field">
+          <div class="cd-field__icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg>
+          </div>
+          <div>
+            <p class="cd-field__label">Email</p>
+            <p class="cd-field__value">
+              <a th:if="${contact.email}" th:href="'mailto:' + ${contact.email}" th:text="${contact.email}">jane@example.com</a>
+              <span th:unless="${contact.email}" class="cd-field__value--empty">Not provided</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="cd-field">
+          <div class="cd-field__icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9m0 0 3-3m-3 3 3 3M4 17h9m0 0-3 3m3-3-3-3"/></svg>
+          </div>
+          <div>
+            <p class="cd-field__label">Work / company</p>
+            <p class="cd-field__value" th:if="${contact.work}" th:text="${contact.work}">Product Designer at Acme</p>
+            <p class="cd-field__value cd-field__value--empty" th:unless="${contact.work}">Not provided</p>
+          </div>
+        </div>
+
+        <div class="cd-field">
+          <div class="cd-field__icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <p class="cd-field__label">Address</p>
+            <p class="cd-field__value" th:if="${contact.address}" th:text="${contact.address}">City, Country</p>
+            <p class="cd-field__value cd-field__value--empty" th:unless="${contact.address}">Not provided</p>
+          </div>
+        </div>
+
+        <div class="cd-field">
+          <div class="cd-field__icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <div>
+            <p class="cd-field__label">Notes</p>
+            <p class="cd-field__value" th:if="${contact.description}" th:text="${contact.description}">Notes about this contact...</p>
+            <p class="cd-field__value cd-field__value--empty" th:unless="${contact.description}">No notes added</p>
+          </div>
+        </div>
+
+      </div>
+      <div class="cd-meta" th:if="${contact.addedOn}">
+        Added on <span th:text="${#temporals.format(contact.addedOn, 'd MMM yyyy')}">1 Jan 2026</span>
+      </div>
+
+    </div>
+  </main>
+
+
+</body>
+</html>
